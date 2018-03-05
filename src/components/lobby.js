@@ -40,6 +40,11 @@ handleCreateRoom(e){
 
     render(){
         const { roomName } = this.state;
+        const { roomList } = this.props;
+
+        const rooms = Object.keys(roomList).map((key, index)=>{
+            return <li key={index} className="collection-item">{roomList[key].name}</li>
+        });
 
         console.log('Lobby Props: ', this.props);
 
@@ -51,6 +56,9 @@ handleCreateRoom(e){
                     <input type="text" onChange={(e)=>{this.setState({roomName: e.target.value})}} value={roomName} />
                     <button>Create Room</button>
                 </form>
+                <ul className="collection">
+                    {rooms}
+                </ul>
             </div>
         )
     }
