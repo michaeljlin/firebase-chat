@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { db } from '../firebase';
+import { connect } from 'react-redux'; 
+import { getRoomList } from '../actions';
 
 class Lobby extends Component{
 constructor(props){
@@ -8,6 +10,13 @@ constructor(props){
     this.state = {
         roomName: ''
     }
+}
+
+componentDidMount(){
+    db.ref('/chat-rooms').on('value', (snapshot)=>{
+        console.log('Snapshot: ', snapshot.val());
+        this.props.getRoomList(snapshot.val());
+    });
 }
 
 handleCreateRoom(e){
@@ -23,10 +32,16 @@ handleCreateRoom(e){
     db.ref('/chat-rooms').push(newRoom).then(resp=>{
         console.log('Add Room Response: ', resp);
     });
+
+    this.setState({
+        roomName: ''
+    });
 }
 
     render(){
         const { roomName } = this.state;
+
+        console.log('Lobby Props: ', this.props);
 
         return(
             <div>
@@ -41,4 +56,10 @@ handleCreateRoom(e){
     }
 }
 
-export default Lobby;
+function mapStateToProps(state){
+    return {
+        roomList: state.chat.roomList
+    }
+}
+
+export default connect(mapStateToProps, {getRoomList})(Lobby);
