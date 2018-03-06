@@ -27,3 +27,15 @@ export function createRoom(name){
         type: types.CREATE_ROOM
     };
 }
+
+export function getRoomData(roomId, logId){
+    return (dispatch)=>{
+        db.ref(`/chat-rooms/${roomId}`).once('value').then((snapshot)=>{
+            console.log('Room Snapshot: ', snapshot.val());
+            dispatch({
+                type: types.GET_ROOM_DATA,
+                payload: snapshot.val()
+            });
+        });
+    };
+}
